@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KFlix - Stream Movies Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(229, 9, 20, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e50914;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e50914;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #e50914, #b20710);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+        }
+
+        .message {
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #ff6b6b;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-link a {
+            color: #e50914;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .admin-link a:hover {
+            color: #ff6b6b;
+        }
+
+        /* ===== ADMIN PANEL ===== */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(229, 9, 20, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-title {
+            font-size: 32px;
+            color: #e50914;
+            font-weight: bold;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: #e50914;
+            border-color: #e50914;
+        }
+
+        .tab-btn:hover {
+            background: rgba(229, 9, 20, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #fff;
+        }
+
+        .logout-btn:hover {
+            background: #e50914;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #e50914;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #e50914;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .add-btn {
+            background: #4CAF50;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #45a049;
+        }
+
+        .users-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .delete-btn {
+            background: rgba(229, 9, 20, 0.3);
+            border: 1px solid #e50914;
+            padding: 8px 15px;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #e50914;
+        }
+
+        .ad-config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .ad-config-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ad-config-title {
+            font-size: 18px;
+            color: #e50914;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .ad-input-group {
+            margin-bottom: 15px;
+        }
+
+        .ad-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .ad-input-group input, 
+        .ad-input-group select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .save-ad-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .save-ad-btn:hover {
+            background: #1976D2;
+        }
+
+        /* ===== MOVIE SITE ===== */
+        .movie-site {
+            display: none;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+        }
+
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .username-display {
+            color: #e50914;
+            font-weight: bold;
+        }
+
+        /* Ads */
+        .ad-banner-top {
+            margin: 20px auto;
+            max-width: 1400px;
+            padding: 0 20px;
+        }
+
+        .ad-banner-content {
+            background: rgba(229, 9, 20, 0.1);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-banner-content:hover {
+            background: rgba(229, 9, 20, 0.2);
+            transform: scale(1.01);
+        }
+
+        .ad-banner-content img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+        }
+
+        .ad-sidebar {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 160px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        .ad-sidebar img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .ad-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e50914;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .ad-floating {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 998;
+            cursor: pointer;
+        }
+
+        .ad-floating img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .category {
+            margin-bottom: 60px;
+        }
+
+        .category-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #e50914;
+            border-left: 4px solid #e50914;
+            padding-left: 15px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+            border-color: #e50914;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .movie-year {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .watch-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .watch-btn:hover {
+            background: #b20710;
+        }
+
+        /* Video Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            border: 2px solid #e50914;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e50914;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 70vh;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Pre-Video Ad Modal */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .ad-modal-content {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 700px;
+            width: 100%;
+            border: 2px solid #e50914;
+            text-align: center;
+        }
+
+        .ad-countdown {
+            font-size: 56px;
+            color: #e50914;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .ad-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .ad-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e50914, #ff6b6b);
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .ad-button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .ad-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .ad-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 9999;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #e50914;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .movie-poster {
+                height: 225px;
+            }
+            .ad-sidebar, .ad-floating {
+                display: none;
+            }
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            .admin-tabs {
+                flex-direction: column;
+            }
+            .ad-config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="spinner"></div>
+        <div style="color: #fff; text-align: center;">Loading...</div>
+    </div>
+
+    <!-- ========== LOGIN PAGE ========== -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="logo">KFlix</div>
+            <div class="subtitle">Stream Movies Online</div>
+            
+            <div class="error-message message" id="loginError"></div>
+            <div class="success-message message" id="loginSuccess"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>ناوی بەکارهێنەر</label>
+                    <input type="text" id="loginUsername" placeholder="ناوی بەکارهێنەر بنووسە" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label>وشەی نهێنی</label>
+                    <input type="password" id="loginPassword" placeholder="وشەی نهێنی بنووسە" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="login-btn">چوونە ژوورەوە</button>
+            </form>
+
+            <div class="admin-link">
+                <a href="#" onclick="showAdminLogin(); return false;">پانێڵی بەڕێوەبەر</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ADMIN PANEL ========== -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-container">
+            <div class="admin-header">
+                <div class="admin-title">پانێڵی بەڕێوەبەر</div>
+                <button class="btn logout-btn" onclick="logout()">چوونە دەرەوە</button>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchTab('users')">👥 بەکارهێنەران</button>
+                <button class="tab-btn" onclick="switchTab('ads')">📢 ڕێکلامەکان</button>
+                <button class="tab-btn" onclick="switchTab('movies')">🎬 فیلمەکان</button>
+            </div>
+
+            <!-- Tab 1: Users Management -->
+            <div id="usersTab" class="tab-content active">
+                <div class="card">
+                    <div class="section-title">زیادکردنی بەکارهێنەری نوێ</div>
+                    <div class="success-message message" id="addSuccess"></div>
+                    <div class="error-message message" id="addError"></div>
+                    <div class="input-row">
+                        <input type="text" id="newUsername" class="input" placeholder="ناوی بەکارهێنەر">
+                        <input type="password" id="newPassword" class="input" placeholder="وشەی نهێنی">
+                        <button class="add-btn" onclick="addUser()">➕ زیادکردن</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">لیستی بەکارهێنەران (<span id="userCount">0</span>)</div>
+                    <div class="users-list" id="usersList"></div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Ads Management -->
+            <div id="adsTab" class="tab-content">
+                <div class="card">
+                    <div class="section-title">ڕێکخستنی ڕێکلامەکان</div>
+                    <div class="success-message message" id="adConfigSuccess"></div>
+                    
+                    <div class="ad-config-grid">
+                        <!-- Top Banner Ad -->
+                        <div class="ad-config-card">
+                            <div class="ad-config-title">📌 ڕێکلامی سەرەوە</div>
+                            <div class="ad-input-group">
+                                <label>جۆر:</label>
+                                <select id="topBannerType" class="input">
+                                    <option value="text">دەق</option>
+                                    <option value="image">وێنە</option>
+                                </select>
+                            </div>
+                            <div class="ad-input-group">
+                                <label>دەق:</label>
+                                <input type="text" id="topBannerText" class="input" placeholder="دەقی ڕێکلام">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری وێنە:</label>
+                                <input type="text" id="topBannerImage" class="input" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری کلیک:</label>
+                                <input type="text" id="sidebarLink" class="input" placeholder="https://example.com">
+                            </div>
+                            <button class="save-ad-btn" onclick="saveAdConfig('sidebar')">💾 پاشەکەوتکردن</button>
+                        </div>
+
+                        <!-- Floating Ad -->
+                        <div class="ad-config-card">
+                            <div class="ad-config-title">💬 ڕێکلامی خوارەوە</div>
+                            <div class="ad-input-group">
+                                <label>جۆر:</label>
+                                <select id="floatingType" class="input">
+                                    <option value="text">دەق</option>
+                                    <option value="image">وێنە</option>
+                                </select>
+                            </div>
+                            <div class="ad-input-group">
+                                <label>دەق:</label>
+                                <input type="text" id="floatingText" class="input" placeholder="دەقی ڕێکلام">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری وێنە:</label>
+                                <input type="text" id="floatingImage" class="input" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری کلیک:</label>
+                                <input type="text" id="floatingLink" class="input" placeholder="https://example.com">
+                            </div>
+                            <button class="save-ad-btn" onclick="saveAdConfig('floating')">💾 پاشەکەوتکردن</button>
+                        </div>
+
+                        <!-- Pre-Video Ad -->
+                        <div class="ad-config-card">
+                            <div class="ad-config-title">▶️ ڕێکلامی پێش فیلم</div>
+                            <div class="ad-input-group">
+                                <label>کات (چرکە):</label>
+                                <input type="number" id="preVideoTime" class="input" value="5" min="3" max="30">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>ناونیشان:</label>
+                                <input type="text" id="preVideoTitle" class="input" placeholder="Advertisement">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>پەیام:</label>
+                                <input type="text" id="preVideoMessage" class="input" placeholder="تکایە چاوەڕوان بە...">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری وێنە:</label>
+                                <input type="text" id="preVideoImage" class="input" placeholder="https://example.com/ad.jpg">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری کلیک:</label>
+                                <input type="text" id="preVideoLink" class="input" placeholder="https://example.com">
+                            </div>
+                            <button class="save-ad-btn" onclick="saveAdConfig('preVideo')">💾 پاشەکەوتکردن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Movies Management -->
+            <div id="moviesTab" class="tab-content">
+                <div class="card">
+                    <div class="section-title">زانیاری فیلمەکان</div>
+                    <p style="color: #aaa; margin-bottom: 20px;">کۆی فیلمەکان: <span style="color: #e50914; font-weight: bold;" id="totalMovies">0</span></p>
+                </div>
+
+                <!-- Add Movie Form -->
+                <div class="card">
+                    <div class="section-title">زیادکردنی فیلمی نوێ</div>
+                    <div class="success-message message" id="movieSuccess"></div>
+                    <div class="error-message message" id="movieError"></div>
+                    
+                    <div style="display: grid; gap: 15px;">
+                        <div class="ad-input-group">
+                            <label>جۆری فیلم:</label>
+                            <select id="movieCategory" class="input">
+                                <option value="bollywood">Bollywood</option>
+                                <option value="hollywood">Hollywood</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        
+                        <div class="ad-input-group">
+                            <label>ناونیشانی فیلم:</label>
+                            <input type="text" id="movieTitle" class="input" placeholder="ناونیشانی فیلم بنووسە">
+                        </div>
+                        
+                        <div class="ad-input-group">
+                            <label>ساڵی دەرچوون:</label>
+                            <input type="text" id="movieYear" class="input" placeholder="2023">
+                        </div>
+                        
+                        <div class="ad-input-group">
+                            <label>لینکی سێرڤەر (بەستەری تەماشاکردن):</label>
+                            <input type="text" id="movieServer" class="input" placeholder="https://example.com/embed/movie">
+                        </div>
+                        
+                        <div class="ad-input-group">
+                            <label>بەستەری پۆستەر (وێنەی فیلم):</label>
+                            <input type="text" id="moviePoster" class="input" placeholder="https://example.com/poster.jpg">
+                        </div>
+                        
+                        <button class="add-btn" style="width: 100%;" onclick="addMovie()">➕ زیادکردنی فیلم</button>
+                    </div>
+                </div>
+
+                <!-- Bollywood Movies List -->
+                <div class="card">
+                    <div class="section-title">Bollywood Movies (<span id="bollywoodCount" style="color: #e50914;">0</span>)</div>
+                    <div id="bollywoodList" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- Hollywood Movies List -->
+                <div class="card">
+                    <div class="section-title">Hollywood Movies (<span id="hollywoodCount" style="color: #e50914;">0</span>)</div>
+                    <div id="hollywoodList" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- International Movies List -->
+                <div class="card">
+                    <div class="section-title">International Movies (<span id="internationalCount" style="color: #e50914;">0</span>)</div>
+                    <div id="internationalList" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MOVIE SITE ========== -->
+    <div class="movie-site" id="movieSite">
+        <div class="header">
+            <div class="logo">KFlix</div>
+            <div class="user-info-header">
+                <span class="username-display">👤 <span id="currentUsername"></span></span>
+                <button class="btn logout-btn" onclick="logout()">چوونە دەرەوە</button>
+            </div>
+        </div>
+
+        <!-- Top Banner Ad -->
+        <div class="ad-banner-top" id="topBannerAd" onclick="openAdLink('topBanner')">
+            <div class="ad-banner-content" id="topBannerContent">
+                <div style="color: #aaa;">📢 Advertisement Space</div>
+            </div>
+        </div>
+
+        <!-- Sidebar Ad -->
+        <div class="ad-sidebar" id="sidebarAd" onclick="openAdLink('sidebar')">
+            <button class="ad-close" onclick="closeSidebarAd(event)">×</button>
+            <div id="sidebarAdContent">
+                <div style="color: #aaa; font-size: 14px;">Side Ad</div>
+            </div>
+        </div>
+
+        <!-- Floating Bottom Ad -->
+        <div class="ad-floating" id="floatingAd" onclick="openAdLink('floating')">
+            <button class="ad-close" onclick="closeFloatingAd(event)">×</button>
+            <div id="floatingAdContent">
+                <div style="color: #aaa; font-size: 14px;">Bottom Ad</div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="category">
+                <h2 class="category-title">Bollywood Movies</h2>
+                <div class="movies-grid" id="bollywood-grid"></div>
+            </div>
+
+            <div class="category">
+                <h2 class="category-title">Hollywood Movies</h2>
+                <div class="movies-grid" id="hollywood-grid"></div>
+            </div>
+
+            <div class="category">
+                <h2 class="category-title">International Movies</h2>
+                <div class="movies-grid" id="international-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeVideo()">&times;</button>
+            <div class="video-container" id="videoContainer"></div>
+            <div class="video-title" id="videoTitle"></div>
+        </div>
+    </div>
+
+    <!-- Pre-Video Ad Modal -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-modal-content">
+            <h2 style="color: #e50914; margin-bottom: 20px; font-size: 28px;" id="adModalTitle">Advertisement</h2>
+            <p style="font-size: 18px; color: #aaa;" id="adModalMessage">تکایە چاوەڕوان بە <span id="adCountdown">5</span> چرکە</p>
+            <div class="ad-countdown" id="adCountdownDisplay">5</div>
+            <div id="adModalImageContainer"></div>
+            <div class="ad-progress-bar">
+                <div class="ad-progress-fill" id="adProgressBar"></div>
+            </div>
+            <button class="ad-button" id="adModalButton" disabled onclick="closeAdModal()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'admin123';
+        
+        let users = {};
+        let currentUser = null;
+        let currentMovie = null;
+        let adTimer = null;
+        let currentTab = 'users';
+
+        // Default Ad Configuration
+        let adsConfig = {
+            topBanner: {
+                enabled: true,
+                type: 'text',
+                text: 'بۆ ڕێکلام کردن پەیوەندیمان پێوە بکە',
+                image: '',
+                link: 'https://t.me/azhanhammza'
+            },
+            sidebar: {
+                enabled: true,
+                type: 'text',
+                text: '📺 Follow Instagram',
+                image: '',
+                link: 'https://www.instagram.com/azhanhammza/'
+            },
+            floating: {
+                enabled: true,
+                type: 'text',
+                text: '🔥 Hot Deals!',
+                image: '',
+                link: 'https://t.me/azhanhammza'
+            },
+            preVideo: {
+                enabled: true,
+                time: 5,
+                title: 'Advertisement',
+                message: 'تکایە چاوەڕوان بە',
+                image: '',
+                link: 'https://t.me/azhanhammza'
+            }
+        };
+
+        // Default Movies Database
+        let defaultMovies = {
+            bollywood: [
+                {title: "Pathaan", year: "2023", server: "https://www.yourupload.com/embed/e42F64DA08gO", poster: "https://filmfare.wwmindia.com/content/2022/dec/pathaan21669878743.jpg"},
+                {title: "Jawan", year: "2023", server: "https://www.yourupload.com/embed/Ov7Jk2b84BJx", poster: "https://assets.gadgets360cdn.com/pricee/assets/product/202206/Jawan-poster_1655912386.jpg"},
+                {title: "jailer", year: "2023", server: "https://www.yourupload.com/embed/u2d228j0Lt4C", poster: "https://data1.ibtimes.co.in/en/full/780336/jailer.jpg"},
+                {title: "Dunki", year: "2023", server: "https://krdline.shafilm.vip/ShaSorani/Movie/Dunki.2023.1080p.Shafilm.mp4", poster: "https://tse3.mm.bing.net/th/id/OIP.ca5eODWUjm8P12HV06Uk9AHaJv?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Tiger 3", year: "2023", server: "https://vidmoly.net/embed-uwjbqwmrjlyj.html", poster: "https://tse3.mm.bing.net/th/id/OIP.a5F8a-SPXG9zkDZSEIfD8AHaKJ?rs=1&pid=ImgDetMain&o=7&rm=3"}
+            ],
+            hollywood: [
+                {title: "Guardians of the Galaxy 3", year: "2023", server: "https://www.yourupload.com/watch/o7v2Pfc1Do7S", poster: "https://th.bing.com/th/id/R.ce359da81fc95c21890b674e5cb8e959?rik=R%2bfa2jwl5ek1eg&riu=http%3a%2f%2fcdn.collider.com%2fwp-content%2fuploads%2fguardians-of-the-galaxy-poster-star-lord.jpg&ehk=71srdLI8qvXF%2baTjSLKAQCh3Mj4EkhgeYvvFX%2bmc9pc%3d&risl=&pid=ImgRaw&r=0"},
+                {title: "Fast X", year: "2023", server: "https://www.yourupload.com/embed/E3G5ig8jx0Gw", poster: "https://tse3.mm.bing.net/th/id/OIP.7e_r_6NEHista9U6MmTXAAHaLs?rs=1&pid=ImgDetMain&o=7&rm=3"}
+            ],
+            international: []
+        };
+
+        let movies = JSON.parse(JSON.stringify(defaultMovies));
+
+        // ==========================================
+        // SHARED STORAGE FUNCTIONS
+        // ==========================================
+        async function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+        }
+
+        async function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+
+        async function loadData() {
+            try {
+                showLoading();
+                
+                // Load users
+                try {
+                    const usersResult = await window.storage.get('kflix_users', true);
+                    if (usersResult && usersResult.value) {
+                        users = JSON.parse(usersResult.value);
+                    } else {
+                        // Initialize with admin
+                        users = {
+                            'admin': {
+                                password: 'admin123',
+                                isAdmin: true,
+                                createdAt: new Date().toISOString()
+                            }
+                        };
+                        await saveUsers();
+                    }
+                } catch (error) {
+                    console.log('Initializing users...');
+                    users = {
+                        'admin': {
+                            password: 'admin123',
+                            isAdmin: true,
+                            createdAt: new Date().toISOString()
+                        }
+                    };
+                    await saveUsers();
+                }
+
+                // Load ads config
+                try {
+                    const adsResult = await window.storage.get('kflix_ads', true);
+                    if (adsResult && adsResult.value) {
+                        adsConfig = JSON.parse(adsResult.value);
+                    } else {
+                        await saveAdsConfig();
+                    }
+                } catch (error) {
+                    console.log('Initializing ads config...');
+                    await saveAdsConfig();
+                }
+
+                // Load movies
+                try {
+                    const moviesResult = await window.storage.get('kflix_movies', true);
+                    if (moviesResult && moviesResult.value) {
+                        movies = JSON.parse(moviesResult.value);
+                    } else {
+                        await saveMovies();
+                    }
+                } catch (error) {
+                    console.log('Initializing movies...');
+                    await saveMovies();
+                }
+
+                hideLoading();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                hideLoading();
+            }
+        }
+
+        async function saveUsers() {
+            try {
+                await window.storage.set('kflix_users', JSON.stringify(users), true);
+            } catch (error) {
+                console.error('Error saving users:', error);
+            }
+        }
+
+        async function saveAdsConfig() {
+            try {
+                await window.storage.set('kflix_ads', JSON.stringify(adsConfig), true);
+            } catch (error) {
+                console.error('Error saving ads config:', error);
+            }
+        }
+
+        async function saveMovies() {
+            try {
+                await window.storage.set('kflix_movies', JSON.stringify(movies), true);
+            } catch (error) {
+                console.error('Error saving movies:', error);
+            }
+        }
+
+        // ==========================================
+        // LOGIN SYSTEM
+        // ==========================================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showLoginError('تکایە هەموو خانەکان پڕبکەرەوە');
+                return;
+            }
+
+            // Reload data to get latest
+            await loadData();
+
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                
+                if (users[username].isAdmin) {
+                    showAdminPanel();
+                } else {
+                    showLoginSuccess('بەخێربێیت ' + currentUser + '!');
+                    setTimeout(() => {
+                        showMovieSite();
+                    }, 1000);
+                }
+            } else {
+                showLoginError('ناوی بەکارهێنەر یان وشەی نهێنی هەڵەیە');
+            }
+        });
+
+        function showAdminLogin() {
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginUsername').focus();
+        }
+
+        // ==========================================
+        // ADMIN PANEL - TAB SWITCHING
+        // ==========================================
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            if (tabName === 'movies') {
+                updateMovieStats();
+                displayMovieLists();
+            }
+        }
+
+        async function showAdminPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('movieSite').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            await updateUsersList();
+            await loadAdConfigToForm();
+            updateMovieStats();
+            displayMovieLists();
+        }
+
+        // ==========================================
+        // USER MANAGEMENT
+        // ==========================================
+        async function addUser() {
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value.trim();
+            
+            if (!username || !password) {
+                showAddError('تکایە ناوی بەکارهێنەر و وشەی نهێنی بنووسە');
+                return;
+            }
+
+            // Reload to get latest users
+            await loadData();
+
+            if (users[username]) {
+                showAddError('ئەم ناوی بەکارهێنەرە پێشتر تۆمارکراوە');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                isAdmin: false,
+                createdAt: new Date().toISOString()
+            };
+
+            await saveUsers();
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            showAddSuccess(`✅ بەکارهێنەری "${username}" بە سەرکەوتوویی زیادکرا`);
+            await updateUsersList();
+        }
+
+        async function deleteUser(username) {
+            if (username === 'admin') {
+                showAddError('ناتوانیت ئەکاونتی بەڕێوەبەر بسڕیتەوە');
+                return;
+            }
+
+            if (confirm(`ئایا دڵنیایت لە سڕینەوەی "${username}"؟`)) {
+                await loadData();
+                delete users[username];
+                await saveUsers();
+                showAddSuccess(`✅ بەکارهێنەری "${username}" سڕایەوە`);
+                await updateUsersList();
+            }
+        }
+
+        async function updateUsersList() {
+            await loadData();
+            const container = document.getElementById('usersList');
+            const usersList = Object.entries(users).filter(([username, data]) => !data.isAdmin);
+            
+            document.getElementById('userCount').textContent = usersList.length;
+
+            if (usersList.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">هیچ بەکارهێنەرێک تۆمار نەکراوە</div>';
+                return;
+            }
+
+            container.innerHTML = usersList
+                .map(([username, data]) => `
+                    <div class="user-item">
+                        <div>
+                            <div style="font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 5px;">👤 ${username}</div>
+                            <div style="font-size: 14px; color: #aaa;">وشەی نهێنی: ${data.password}</div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteUser('${username}')">🗑️ سڕینەوە</button>
+                    </div>
+                `)
+                .join('');
+        }
+
+        // ==========================================
+        // AD CONFIGURATION
+        // ==========================================
+        async function loadAdConfigToForm() {
+            await loadData();
+            
+            document.getElementById('topBannerType').value = adsConfig.topBanner.type;
+            document.getElementById('topBannerText').value = adsConfig.topBanner.text;
+            document.getElementById('topBannerImage').value = adsConfig.topBanner.image;
+            document.getElementById('topBannerLink').value = adsConfig.topBanner.link;
+
+            document.getElementById('sidebarType').value = adsConfig.sidebar.type;
+            document.getElementById('sidebarText').value = adsConfig.sidebar.text;
+            document.getElementById('sidebarImage').value = adsConfig.sidebar.image;
+            document.getElementById('sidebarLink').value = adsConfig.sidebar.link;
+
+            document.getElementById('floatingType').value = adsConfig.floating.type;
+            document.getElementById('floatingText').value = adsConfig.floating.text;
+            document.getElementById('floatingImage').value = adsConfig.floating.image;
+            document.getElementById('floatingLink').value = adsConfig.floating.link;
+
+            document.getElementById('preVideoTime').value = adsConfig.preVideo.time;
+            document.getElementById('preVideoTitle').value = adsConfig.preVideo.title;
+            document.getElementById('preVideoMessage').value = adsConfig.preVideo.message;
+            document.getElementById('preVideoImage').value = adsConfig.preVideo.image;
+            document.getElementById('preVideoLink').value = adsConfig.preVideo.link;
+        }
+
+        async function saveAdConfig(adType) {
+            if (adType === 'topBanner') {
+                adsConfig.topBanner = {
+                    enabled: true,
+                    type: document.getElementById('topBannerType').value,
+                    text: document.getElementById('topBannerText').value,
+                    image: document.getElementById('topBannerImage').value,
+                    link: document.getElementById('topBannerLink').value
+                };
+            } else if (adType === 'sidebar') {
+                adsConfig.sidebar = {
+                    enabled: true,
+                    type: document.getElementById('sidebarType').value,
+                    text: document.getElementById('sidebarText').value,
+                    image: document.getElementById('sidebarImage').value,
+                    link: document.getElementById('sidebarLink').value
+                };
+            } else if (adType === 'floating') {
+                adsConfig.floating = {
+                    enabled: true,
+                    type: document.getElementById('floatingType').value,
+                    text: document.getElementById('floatingText').value,
+                    image: document.getElementById('floatingImage').value,
+                    link: document.getElementById('floatingLink').value
+                };
+            } else if (adType === 'preVideo') {
+                adsConfig.preVideo = {
+                    enabled: true,
+                    time: parseInt(document.getElementById('preVideoTime').value),
+                    title: document.getElementById('preVideoTitle').value,
+                    message: document.getElementById('preVideoMessage').value,
+                    image: document.getElementById('preVideoImage').value,
+                    link: document.getElementById('preVideoLink').value
+                };
+            }
+
+            await saveAdsConfig();
+            showAdConfigSuccess('✅ ڕێکلامەکە بە سەرکەوتوویی پاشەکەوت کرا!');
+        }
+
+        function showAdConfigSuccess(message) {
+            const el = document.getElementById('adConfigSuccess');
+            el.textContent = message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        // ==========================================
+        // MOVIE MANAGEMENT
+        // ==========================================
+        async function addMovie() {
+            const category = document.getElementById('movieCategory').value;
+            const title = document.getElementById('movieTitle').value.trim();
+            const year = document.getElementById('movieYear').value.trim();
+            const server = document.getElementById('movieServer').value.trim();
+            const poster = document.getElementById('moviePoster').value.trim();
+
+            if (!title || !year || !server || !poster) {
+                showMovieError('تکایە هەموو خانەکان پڕبکەرەوە');
+                return;
+            }
+
+            await loadData();
+
+            const newMovie = {
+                title: title,
+                year: year,
+                server: server,
+                poster: poster
+            };
+
+            movies[category].push(newMovie);
+            await saveMovies();
+
+            document.getElementById('movieTitle').value = '';
+            document.getElementById('movieYear').value = '';
+            document.getElementById('movieServer').value = '';
+            document.getElementById('moviePoster').value = '';
+
+            showMovieSuccess(`✅ فیلمی "${title}" بە سەرکەوتوویی زیادکرا`);
+            updateMovieStats();
+            displayMovieLists();
+        }
+
+        async function deleteMovie(category, index) {
+            await loadData();
+            const movie = movies[category][index];
+            if (confirm(`ئایا دڵنیایت لە سڕینەوەی "${movie.title}"؟`)) {
+                movies[category].splice(index, 1);
+                await saveMovies();
+                showMovieSuccess(`✅ فیلمی "${movie.title}" سڕایەوە`);
+                updateMovieStats();
+                displayMovieLists();
+            }
+        }
+
+        function displayMovieLists() {
+            displayMovieList('bollywood', 'bollywoodList');
+            displayMovieList('hollywood', 'hollywoodList');
+            displayMovieList('international', 'internationalList');
+        }
+
+        function displayMovieList(category, containerId) {
+            const container = document.getElementById(containerId);
+            const moviesList = movies[category];
+
+            if (moviesList.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">هیچ فیلمێک نییە</div>';
+                return;
+            }
+
+            container.innerHTML = moviesList
+                .map((movie, index) => `
+                    <div class="user-item" style="margin-bottom: 15px;">
+                        <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                            <img src="${movie.poster}" alt="${movie.title}" style="width: 60px; height: 90px; object-fit: cover; border-radius: 5px;" onerror="this.src='https://via.placeholder.com/60x90?text=No+Image'">
+                            <div>
+                                <div style="font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 5px;">
+                                    ${movie.title}
+                                </div>
+                                <div style="font-size: 14px; color: #aaa;">
+                                    ساڵ: ${movie.year}
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteMovie('${category}', ${index})">🗑️ سڕینەوە</button>
+                    </div>
+                `)
+                .join('');
+        }
+
+        function showMovieError(message) {
+            const el = document.getElementById('movieError');
+            el.textContent = '❌ ' + message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function showMovieSuccess(message) {
+            const el = document.getElementById('movieSuccess');
+            el.textContent = message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function updateMovieStats() {
+            const bollywoodCount = movies.bollywood.length;
+            const hollywoodCount = movies.hollywood.length;
+            const internationalCount = movies.international.length;
+            const total = bollywoodCount + hollywoodCount + internationalCount;
+
+            document.getElementById('totalMovies').textContent = total;
+            document.getElementById('bollywoodCount').textContent = bollywoodCount;
+            document.getElementById('hollywoodCount').textContent = hollywoodCount;
+            document.getElementById('internationalCount').textContent = internationalCount;
+        }
+
+        // ==========================================
+        // MOVIE SITE
+        // ==========================================
+        async function showMovieSite() {
+            await loadData();
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('movieSite').style.display = 'block';
+            document.getElementById('currentUsername').textContent = currentUser;
+            renderMovies();
+            initializeAds();
+        }
+
+        function renderMovies() {
+            renderCategory('bollywood', 'bollywood-grid');
+            renderCategory('hollywood', 'hollywood-grid');
+            if (movies.international.length > 0) {
+                renderCategory('international', 'international-grid');
+            }
+        }
+
+        function renderCategory(category, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = '';
+            
+            movies[category].forEach((movie, index) => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <div class="movie-poster">
+                        <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(movie.title)}'">
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-year">${movie.year}</div>
+                        <button class="watch-btn" onclick="playMovie('${category}', ${index})">▶ Watch Now</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function playMovie(category, index) {
+            currentMovie = { category, index };
+            showPreVideoAd();
+        }
+
+        function loadMovie() {
+            if (!currentMovie) return;
+            
+            const movie = movies[currentMovie.category][currentMovie.index];
+            document.getElementById('videoTitle').textContent = movie.title + ' (' + movie.year + ')';
+            document.getElementById('videoContainer').innerHTML = `<iframe src="${movie.server}" allowfullscreen></iframe>`;
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeVideo() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoContainer').innerHTML = '';
+            currentMovie = null;
+        }
+
+        // ==========================================
+        // AD SYSTEM
+        // ==========================================
+        function initializeAds() {
+            if (adsConfig.topBanner.enabled) {
+                const content = document.getElementById('topBannerContent');
+                if (adsConfig.topBanner.type === 'image' && adsConfig.topBanner.image) {
+                    content.innerHTML = `<img src="${adsConfig.topBanner.image}" alt="Ad">`;
+                } else {
+                    content.innerHTML = `<div style="color: #fff; font-size: 18px;">${adsConfig.topBanner.text}</div>`;
+                }
+            }
+
+            if (adsConfig.sidebar.enabled) {
+                const content = document.getElementById('sidebarAdContent');
+                if (adsConfig.sidebar.type === 'image' && adsConfig.sidebar.image) {
+                    content.innerHTML = `<img src="${adsConfig.sidebar.image}" alt="Ad">`;
+                } else {
+                    content.innerHTML = `<div style="color: #fff;">${adsConfig.sidebar.text}</div>`;
+                }
+            }
+
+            if (adsConfig.floating.enabled) {
+                const content = document.getElementById('floatingAdContent');
+                if (adsConfig.floating.type === 'image' && adsConfig.floating.image) {
+                    content.innerHTML = `<img src="${adsConfig.floating.image}" alt="Ad">`;
+                } else {
+                    content.innerHTML = `<div style="color: #fff;">${adsConfig.floating.text}</div>`;
+                }
+            }
+        }
+
+        function openAdLink(adType) {
+            const link = adsConfig[adType]?.link;
+            if (link) {
+                window.open(link, '_blank');
+            }
+        }
+
+        function closeSidebarAd(event) {
+            event.stopPropagation();
+            document.getElementById('sidebarAd').style.display = 'none';
+        }
+
+        function closeFloatingAd(event) {
+            event.stopPropagation();
+            document.getElementById('floatingAd').style.display = 'none';
+        }
+
+        // ==========================================
+        // PRE-VIDEO AD
+        // ==========================================
+        function showPreVideoAd() {
+            if (!adsConfig.preVideo.enabled) {
+                loadMovie();
+                return;
+            }
+
+            const modal = document.getElementById('adModal');
+            const time = adsConfig.preVideo.time;
+            
+            document.getElementById('adModalTitle').textContent = adsConfig.preVideo.title;
+            document.getElementById('adModalMessage').innerHTML = `${adsConfig.preVideo.message} <span id="adCountdown">${time}</span> چرکە`;
+            document.getElementById('adCountdownDisplay').textContent = time;
+            document.getElementById('adModalButton').disabled = true;
+            
+            const imageContainer = document.getElementById('adModalImageContainer');
+            if (adsConfig.preVideo.image) {
+                imageContainer.innerHTML = `<img src="${adsConfig.preVideo.image}" class="ad-image" alt="Ad">`;
+            } else {
+                imageContainer.innerHTML = '';
+            }
+
+            modal.style.display = 'flex';
+
+            let timeLeft = time;
+            const progressBar = document.getElementById('adProgressBar');
+            const button = document.getElementById('adModalButton');
+            const progressIncrement = 100 / time;
+            let currentProgress = 0;
+
+            adTimer = setInterval(() => {
+                timeLeft--;
+                currentProgress += progressIncrement;
+                
+                document.getElementById('adCountdown').textContent = timeLeft;
+                document.getElementById('adCountdownDisplay').textContent = timeLeft;
+                progressBar.style.width = currentProgress + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(adTimer);
+                    button.disabled = false;
+                    button.style.background = '#4CAF50';
+                    button.textContent = 'Watch Movie Now!';
+                }
+            }, 1000);
+        }
+
+        function closeAdModal() {
+            if (adTimer) {
+                clearInterval(adTimer);
+            }
+            
+            if (adsConfig.preVideo.link) {
+                window.open(adsConfig.preVideo.link, '_blank');
+            }
+            
+            document.getElementById('adModal').style.display = 'none';
+            loadMovie();
+        }
+
+        // ==========================================
+        // MESSAGES
+        // ==========================================
+        function showLoginError(message) {
+            const el = document.getElementById('loginError');
+            el.textContent = '❌ ' + message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function showLoginSuccess(message) {
+            const el = document.getElementById('loginSuccess');
+            el.textContent = '✅ ' + message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function showAddError(message) {
+            const el = document.getElementById('addError');
+            el.textContent = '❌ ' + message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function showAddSuccess(message) {
+            const el = document.getElementById('addSuccess');
+            el.textContent = message;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        // ==========================================
+        // LOGOUT
+        // ==========================================
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('movieSite').style.display = 'none';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // ==========================================
+        // INITIALIZE
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+        });
+    </script>
+</body>
+</html>لیک:</label>
+                                <input type="text" id="topBannerLink" class="input" placeholder="https://example.com">
+                            </div>
+                            <button class="save-ad-btn" onclick="saveAdConfig('topBanner')">💾 پاشەکەوتکردن</button>
+                        </div>
+
+                        <!-- Sidebar Ad -->
+                        <div class="ad-config-card">
+                            <div class="ad-config-title">📌 ڕێکلامی لاتەنیشت</div>
+                            <div class="ad-input-group">
+                                <label>جۆر:</label>
+                                <select id="sidebarType" class="input">
+                                    <option value="text">دەق</option>
+                                    <option value="image">وێنە</option>
+                                </select>
+                            </div>
+                            <div class="ad-input-group">
+                                <label>دەق:</label>
+                                <input type="text" id="sidebarText" class="input" placeholder="دەقی ڕێکلام">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری وێنە:</label>
+                                <input type="text" id="sidebarImage" class="input" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="ad-input-group">
+                                <label>بەستەری ک
